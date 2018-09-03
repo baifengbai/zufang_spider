@@ -39,20 +39,6 @@ class DataBase :
 		sql = 'create table ' + self.table + ' (id integer PRIMARY KEY autoincrement, title text, url text, hType text, hSize text, district text, area text, comm text, price integer, agent text, source text, addtime text)'
 		self.cur.execute(sql)
 
-		self.createViews()
-
-
-	def createViews (self) :
-		views = [
-			"CREATE VIEW \"2k~3.5k 可以住哪里\" AS select count(*) as `租房数`, district as `城区`, area as `街道`, comm as `社区`, round(avg(price)) as `均价`, max(price) as `最高价` from housewhere `城区` not in('顺义','昌平','大兴','通州','房山','平谷','怀柔')GROUP BY `社区` HAVING `均价` >= 2000 and `均价` <= 3500 and `租房数` >= 10ORDER BY `均价` asc;",
-			"CREATE VIEW \"石景山居民区分布\" AS select count(*) as `租房数`, comm as `小区`, round(avg(price)) as `均价`, max(price) as `最高价` from house where district = '石景山' GROUP BY `小区` HAVING `租房数` > 10ORDER BY `均价` asc;",
-			"CREATE VIEW \"石景山街道分布\" AS select count(*) as `租房数`, area as `街道`, round(avg(price)) as `均价`, max(price) as `最高价` from house where district = '石景山' GROUP BY `街道` ORDER BY `均价` asc;",
-		]
-
-		for sql in views:
-			self.cur.execute(sql)
-
-
 	def query (self, sql) :
 		if self.connStat == False : return False
 
